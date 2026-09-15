@@ -7,13 +7,14 @@
 ![Docs](https://img.shields.io/badge/docs-DocFX-2F80ED)
 ![License](https://img.shields.io/badge/license-public%20domain-blue)
 
-> [!IMPORTANT] This project is **not finished yet**. As such,
-> **contributions will not be accepted**. This is to prevent too much
-> noise from interfering with the team's development process.
-> However, the entire source code is released into the **public
-> domain**, so you are free to make your own modifications by forking
-> the repo.  For critical security-related concerns, please email
-> [maq] *at* [alexover.dev], but please note that the mailbox is not
+> [!IMPORTANT]
+> This project is **not finished yet**. As such, **contributions will
+> not be accepted**. This is to prevent too much noise from
+> interfering with the team's development process.  However, the
+> entire source code is released into the **public domain**, so you
+> are free to make your own modifications by forking the repo.  For
+> critical security-related concerns, please email [maq] *at*
+> [alexover.dev], but please note that the mailbox is not
 > automatically managed and a response is not guaranteed.
 
 ## Repository map
