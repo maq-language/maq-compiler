@@ -32,7 +32,7 @@ jobs:
           dotnet run
           --project tools/Docs.DependencyGraph
           --
-          Maq.sln
+          Maq.slnx
           --output docs/architecture/project-dependencies.md
 
       - name: Install DocFX
