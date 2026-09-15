@@ -1,49 +1,61 @@
-﻿using System.Diagnostics;
+﻿using System.CommandLine;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using Microsoft.Build.Locator;
 using Maq.Docs.DependencyGraph;
 
-if (args.Length < 1 || args.Length > 2)
+var solutionArgument = new Argument<string?>("solution")
 {
-    Console.Error.WriteLine(
-        """
-        Usage:
-          Docs.DependencyGraph <SOLUTION> [<OUTPUT>]
+    Description = "Optional path to the solution file.",
+    Arity = ArgumentArity.ZeroOrOne
+};
 
-        Examples:
-          Docs.DependencyGraph Project.sln
-          Docs.DependencyGraph Project.sln docs/architecture/project-dependencies.md
-        """
-    );
-    return;
-}
-
-MSBuildLocator.RegisterDefaults();
-
-var solutionPath = Path.GetFullPath(args[0]);
-
-if (!File.Exists(solutionPath))
+var outputOption = new Option<string>("--output", "-o")
 {
-    throw new FileNotFoundException($"Solution does not exist: {solutionPath}");
-}
+    Description = "Output path relative to the solution directory."
+};
 
-var solutionDirectory = Path.GetDirectoryName(solutionPath) ?? throw new InvalidOperationException("Could not determine solution directory.");
-
-var stopwatch = Stopwatch.StartNew();
-
-var dependencyGraph = new DependencyGraph(solutionPath, solutionDirectory);
-
-if (args.Length == 2)
+var rootCommand = new RootCommand("Generates project dependency documentation.")
 {
-    var outputPath = Path.GetFullPath(args[1]);
+    solutionArgument,
+    outputOption
+};
 
-    var outputDirectory = Path.GetDirectoryName(outputPath);
+rootCommand.SetAction(parseResult =>
+{
+    MSBuildLocator.RegisterDefaults();
 
-    if (!string.IsNullOrWhiteSpace(outputDirectory))
+    var solution = parseResult.GetValue(solutionArgument);
+    var output = parseResult.GetValue(outputOption);
+
+    Run(solution, output);
+});
+
+return rootCommand.Parse(args).Invoke();
+
+static void Run(string? solution, string? output)
+{
+    var solutionPath = string.IsNullOrEmpty(solution) ? FindSolutionPath() : Path.GetFullPath(solution);
+
+    if (!File.Exists(solutionPath))
+        throw new FileNotFoundException($"Solution not found: {solutionPath}");
+
+    var solutionDirectory = Path.GetDirectoryName(solutionPath) ?? throw new InvalidOperationException("Could not determine solution directory.");
+
+    var stopwatch = Stopwatch.StartNew();
+
+    var dependencyGraph = new DependencyGraph(solutionPath, solutionDirectory);
+
+    if (string.IsNullOrEmpty(output))
     {
-        Directory.CreateDirectory(outputDirectory);
+        Console.Out.Write(dependencyGraph.ToMarkdown());
+        return;
     }
+
+    var outputPath = Path.IsPathRooted(output) ? output : Path.Combine(solutionDirectory, output);
+
+    Directory.CreateDirectory(Path.GetDirectoryName(outputPath) ?? throw new InvalidOperationException("Could not get output directory path."));
 
     File.WriteAllText(outputPath, dependencyGraph.ToMarkdown(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 
@@ -53,13 +65,8 @@ if (args.Length == 2)
         .GetRelativePath(solutionDirectory, outputPath)
         .Replace('\\', '/');
 
-    Console.WriteLine($"Generated {relativeOutputPath} in {stopwatch.Elapsed.TotalMilliseconds:N0} ms");
-
-    return;
+    Console.Error.WriteLine($"Generated {relativeOutputPath} in {stopwatch.Elapsed.TotalMilliseconds:N0} ms");
 }
-
-Console.Write(dependencyGraph.ToMarkdown());
-return;
 
 static string FindSolutionPath()
 {

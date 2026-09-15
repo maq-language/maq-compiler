@@ -33,7 +33,7 @@ jobs:
           --project tools/Docs.DependencyGraph
           --
           Maq.sln
-          docs/architecture/project-dependencies.md
+          --output docs/architecture/project-dependencies.md
 
       - name: Install DocFX
         run: dotnet tool install --global docfx
