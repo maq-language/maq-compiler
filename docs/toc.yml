@@ -1,0 +1,10 @@
+- name: Home
+  href: index.md
+
+- name: Architecture
+  items:
+    - name: Project Dependencies
+      href: architecture/project-dependencies.md
+
+- name: API Reference
+  href: api/

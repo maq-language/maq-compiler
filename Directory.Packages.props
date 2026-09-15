@@ -1,13 +1,12 @@
 <Project>
-
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup>
+    <PackageVersion Include="Microsoft.Build" Version="18.9.6" />
+    <PackageVersion Include="Microsoft.Build.Locator" Version="1.11.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
     <PackageVersion Include="MSTest.TestFramework" Version="4.4.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="4.4.0" />
   </ItemGroup>
-
 </Project>
