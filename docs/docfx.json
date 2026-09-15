@@ -18,7 +18,8 @@
         "TargetFramework": "net10.0"
       },
       "namespaceLayout": "nested",
-      "memberLayout": "samePage"
+      "memberLayout": "samePage",
+      "includePrivateMembers": true
     }
   ],
   "build": {
@@ -37,6 +38,7 @@
     "globalMetadata": {
       "_appName": "Maq Compiler",
       "_appTitle": "Maq Compiler Documentation",
+      "_disableContribution": true,
       "_enableSearch": true,
       "_enableNewTab": true
     }
