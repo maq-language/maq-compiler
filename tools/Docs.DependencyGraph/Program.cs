@@ -36,36 +36,46 @@ return rootCommand.Parse(args).Invoke();
 
 static void Run(string? solution, string? output)
 {
-    var solutionPath = string.IsNullOrEmpty(solution) ? FindSolutionPath() : Path.GetFullPath(solution);
+    var profile = new Profile();
+
+    var solutionPath = profile.Measure("Find solution", () => string.IsNullOrEmpty(solution) ? FindSolutionPath() : Path.GetFullPath(solution));
 
     if (!File.Exists(solutionPath))
         throw new FileNotFoundException($"Solution not found: {solutionPath}");
 
     var solutionDirectory = Path.GetDirectoryName(solutionPath) ?? throw new InvalidOperationException("Could not determine solution directory.");
 
-    var stopwatch = Stopwatch.StartNew();
+    var document = profile.Measure("Generate document", () =>
+    {
+        var dependencyGraph = new DependencyGraph(solutionPath, solutionDirectory);
 
-    var dependencyGraph = new DependencyGraph(solutionPath, solutionDirectory);
+        return dependencyGraph.ToMarkdown();
+    });
 
     if (string.IsNullOrEmpty(output))
     {
-        Console.Out.Write(dependencyGraph.ToMarkdown());
+        profile.Measure("Write document", () => Console.Out.Write(document));
+        profile.Print(Console.Error);
         return;
     }
 
     var outputPath = Path.IsPathRooted(output) ? output : Path.Combine(solutionDirectory, output);
 
-    Directory.CreateDirectory(Path.GetDirectoryName(outputPath) ?? throw new InvalidOperationException("Could not get output directory path."));
+    profile.Measure("Write document", () =>
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(outputPath) ?? throw new InvalidOperationException("Could not get output directory path."));
 
-    File.WriteAllText(outputPath, dependencyGraph.ToMarkdown(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-
-    stopwatch.Stop();
+        File.WriteAllText(outputPath, document, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+    });
 
     var relativeOutputPath = Path
         .GetRelativePath(solutionDirectory, outputPath)
         .Replace('\\', '/');
 
-    Console.Error.WriteLine($"Generated {relativeOutputPath} in {stopwatch.Elapsed.TotalMilliseconds:N0} ms");
+    Console.Error.WriteLine($"Generated {relativeOutputPath}");
+    Console.Error.WriteLine();
+
+    profile.Print(Console.Error);
 }
 
 static string FindSolutionPath()
