@@ -1,2 +1,20 @@
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+# C# files
 [*.cs]
+
+#### Core EditorConfig Options ####
+
+# Indentation and spacing
+indent_size = 4
+indent_style = space
+tab_width = 4
+
+# New line preferences
+end_of_line = crlf
+insert_final_newline = false
+
+#### .NET Coding Conventions ####
+
+# Diagnostic warnings
 dotnet_diagnostic.CS1591.severity = none  # Missing XML comment for publicly visible type or member 'Type_or_Member'
