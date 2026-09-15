@@ -480,3 +480,10 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Documentation HTML files
+docs/_site/
+
+# Documentation metadata files
+docs/api/*
+!docs/api/*.md

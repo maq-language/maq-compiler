@@ -23,7 +23,7 @@
           ]
         }
       ],
-      "dest": "../obj/docfx/api",
+      "dest": "api",
       "includePrivateMembers": true,
       "properties": {
         "TargetFramework": "net10.0"
@@ -35,14 +35,7 @@
   ],
   "build": {
     "content": [
-      "**/*.{md,yml}",
-      {
-        "src": "../obj/docfx/api",
-        "files": [
-          "**/*.yml"
-        ],
-        "dest": "api"
-      }
+      "**/*.{md,yml}"
     ],
     "resource": [
       "**/images/**",
