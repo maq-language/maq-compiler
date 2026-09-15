@@ -11,20 +11,38 @@
             "**/bin/**",
             "**/obj/**"
           ]
+        },
+        {
+          "src": "../tools",
+          "files": [
+            "**/*.csproj"
+          ],
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**"
+          ]
         }
       ],
-      "dest": "api",
+      "dest": "../obj/docfx/api",
+      "includePrivateMembers": true,
       "properties": {
         "TargetFramework": "net10.0"
       },
-      "namespaceLayout": "nested",
+      "namespaceLayout": "flattened",
       "memberLayout": "samePage",
-      "includePrivateMembers": true
+      "enumSortOrder": "declaringOrder"
     }
   ],
   "build": {
     "content": [
-      "**/*.{md,yml}"
+      "**/*.{md,yml}",
+      {
+        "src": "../obj/docfx/api",
+        "files": [
+          "**/*.yml"
+        ],
+        "dest": "api"
+      }
     ],
     "resource": [
       "**/images/**",

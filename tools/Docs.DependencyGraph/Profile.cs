@@ -1,5 +1,7 @@
 using System.Diagnostics;
 
+namespace Maq.Docs.DependencyGraph;
+
 internal class Profile
 {
     private readonly List<Entry> _entries = [];
