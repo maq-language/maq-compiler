@@ -5,6 +5,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Maq.Source.Tests/Maq.Source.Tests.csproj" />
+    <Project Path="tests/Maq.Syntax.Tests/Maq.Syntax.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/" />
   <Folder Name="/tools/Docs.DependencyGraph/">
