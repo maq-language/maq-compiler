@@ -16,7 +16,7 @@ public class Tokenizer : IEnumerable<SyntaxToken>
     private readonly TokenFilter _filter;
     private int _position;
 
-    public Tokenizer(SourceText source, TokenFilter filter = TokenFilter.Trivia)
+    public Tokenizer(SourceText source, TokenFilter filter = TokenFilter.Ignorable)
         : this(source, 0, filter)
     {
     }

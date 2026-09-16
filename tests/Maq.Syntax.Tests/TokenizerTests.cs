@@ -268,4 +268,20 @@ public sealed class TokenizerTests
         Assert.AreEqual(first, second);
         Assert.AreEqual(0, tokenizer.Position);
     }
+
+    [TestMethod]
+    public void TestReadFilterOverrideCanIncludeSpacing()
+    {
+        var source = SourceText.From("alpha beta");
+
+        var tokenizer = new Tokenizer(source, TokenFilter.Spacing);
+
+        var alpha = tokenizer.Read();
+        var spacing = tokenizer.Read(TokenFilter.None);
+        var beta = tokenizer.Read();
+
+        Assert.AreEqual(SyntaxKind.IdentifierToken, alpha.Kind);
+        Assert.AreEqual(SyntaxKind.SpacingToken, spacing.Kind);
+        Assert.AreEqual(SyntaxKind.IdentifierToken, beta.Kind);
+    }
 }

@@ -9,5 +9,5 @@ public enum TokenFilter
     EndOfLine = 1 << 1,
     Comment = 1 << 2,
 
-    Trivia = Spacing | EndOfLine | Comment,
+    Ignorable = Spacing | EndOfLine | Comment,
 }
