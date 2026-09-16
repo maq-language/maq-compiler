@@ -283,9 +283,9 @@ public class Tokenizer : IEnumerable<SyntaxToken>
 
     private SyntaxKind ScanIdentifier(byte first, int start)
     {
-        if (IsAsciiDigit(first))
+        if (Char.IsDigit((char)first))
         {
-            while (!IsAtEnd && (IsAsciiDigit(Current) || Current == (byte)'_'))
+            while (!IsAtEnd && (Char.IsDigit((char)Current) || Current == (byte)'_'))
                 _position += 1;
 
             return SyntaxKind.IntegerLiteralToken;
@@ -304,23 +304,6 @@ public class Tokenizer : IEnumerable<SyntaxToken>
         }
 
         return SyntaxKind.BadToken;
-    }
-
-    private bool IsIdentifierContinuationAt(int position)
-    {
-        var value = _source[position];
-
-        if (value < 0x80)
-        {
-            return value is (byte)'_' ||
-                   value is >= (byte)'A' and <= (byte)'Z' ||
-                   value is >= (byte)'a' and <= (byte)'z' ||
-                   value is >= (byte)'0' and <= (byte)'9';
-        }
-
-        var rune = DecodeRune(position, out _);
-
-        return IsIdentifierContinuation(rune);
     }
 
     private void AdvanceRune()
@@ -360,37 +343,37 @@ public class Tokenizer : IEnumerable<SyntaxToken>
         return rune;
     }
 
+    private bool IsIdentifierContinuationAt(int position)
+    {
+        var value = _source[position];
+
+        if (value < 0x80)
+        {
+            return value is (byte)'_' ||
+                   value is >= (byte)'A' and <= (byte)'Z' ||
+                   value is >= (byte)'a' and <= (byte)'z' ||
+                   value is >= (byte)'0' and <= (byte)'9';
+        }
+
+        var rune = DecodeRune(position, out _);
+
+        return IsIdentifierContinuation(rune);
+    }
+
+    private static readonly HashSet<UnicodeCategory> _identifierStarts = [UnicodeCategory.UppercaseLetter, UnicodeCategory.LowercaseLetter, UnicodeCategory.TitlecaseLetter, UnicodeCategory.ModifierLetter, UnicodeCategory.OtherLetter, UnicodeCategory.LetterNumber];
+    private static readonly HashSet<UnicodeCategory> _identifierConnectors = [UnicodeCategory.DecimalDigitNumber, UnicodeCategory.NonSpacingMark, UnicodeCategory.SpacingCombiningMark, UnicodeCategory.ConnectorPunctuation];
+    private static readonly HashSet<UnicodeCategory> _identifierContinuations = new HashSet<UnicodeCategory>(_identifierStarts.Union(_identifierConnectors));
+
     private static bool IsIdentifierStart(Rune rune)
     {
         if (rune.Value == '_')
             return true;
 
-        return Rune.GetUnicodeCategory(rune) switch
-        {
-            UnicodeCategory.UppercaseLetter => true,
-            UnicodeCategory.LowercaseLetter => true,
-            UnicodeCategory.TitlecaseLetter => true,
-            UnicodeCategory.ModifierLetter => true,
-            UnicodeCategory.OtherLetter => true,
-            UnicodeCategory.LetterNumber => true,
-            _ => false,
-        };
+        return _identifierStarts.Contains(Rune.GetUnicodeCategory(rune));
     }
 
     private static bool IsIdentifierContinuation(Rune rune)
     {
-        if (IsIdentifierStart(rune))
-            return true;
-
-        return Rune.GetUnicodeCategory(rune) switch
-        {
-            UnicodeCategory.DecimalDigitNumber => true,
-            UnicodeCategory.NonSpacingMark => true,
-            UnicodeCategory.SpacingCombiningMark => true,
-            UnicodeCategory.ConnectorPunctuation => true,
-            _ => false,
-        };
+        return _identifierContinuations.Contains(Rune.GetUnicodeCategory(rune));
     }
-
-    private static bool IsAsciiDigit(byte value) => value is >= (byte)'0' and <= (byte)'9';
 }
