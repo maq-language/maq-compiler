@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Maq.Source/Maq.Source.csproj" />
+    <Project Path="src/Maq.Syntax/Maq.Syntax.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Maq.Source.Tests/Maq.Source.Tests.csproj" />
