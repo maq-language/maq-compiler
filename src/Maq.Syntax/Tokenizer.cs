@@ -72,7 +72,7 @@ public class Tokenizer : IEnumerable<SyntaxToken>
 
         // NOTE(alex): Consume only the first byte.
         // Multi-character tokens are handled explicity in the switch case below.
-        _position += 1;
+        AdvanceChars(1);
 
         var kind = current switch
         {
@@ -218,12 +218,20 @@ public class Tokenizer : IEnumerable<SyntaxToken>
 
     private bool HasByte(int offset = 0) => _position + offset < _source.Length;
 
+    private void AdvanceChars(int count)
+    {
+        if (_position + count > _source.Length)
+            throw new ArgumentOutOfRangeException(nameof(count));
+
+        _position += count;
+    }
+
     private bool TryConsume(byte value)
     {
         if (IsAtEnd || Current != value)
             return false;
 
-        _position += 1;
+        AdvanceChars(1);
         return true;
     }
 
@@ -246,7 +254,7 @@ public class Tokenizer : IEnumerable<SyntaxToken>
     {
         while (!IsAtEnd && Current is (byte)'\t' or (byte)'\v' or (byte)'\f' or (byte)' ')
         {
-            _position += 1;
+            AdvanceChars(1);
         }
 
         return SyntaxKind.SpacingToken;
@@ -257,7 +265,7 @@ public class Tokenizer : IEnumerable<SyntaxToken>
         // NOTE(alex): The first byte was consumed already by Read().
         if (first == (byte)'\r' && !IsAtEnd && Current == (byte)'\n')
         {
-            _position += 1;
+            AdvanceChars(1);
         }
 
         return SyntaxKind.EndOfLineToken;
@@ -268,14 +276,14 @@ public class Tokenizer : IEnumerable<SyntaxToken>
         while (!IsAtEnd && Current != (byte)'"')
         {
             if (Current == (byte)'\\' && HasByte(1))
-                _position += 1;
+                AdvanceChars(1);
 
             AdvanceRune();
         }
 
         if (Current == (byte)'"')
         {
-            _position += 1;
+            AdvanceChars(1);
         }
 
         return SyntaxKind.StringLiteralToken;
@@ -286,7 +294,7 @@ public class Tokenizer : IEnumerable<SyntaxToken>
         if (Char.IsDigit((char)first))
         {
             while (!IsAtEnd && (Char.IsDigit((char)Current) || Current == (byte)'_'))
-                _position += 1;
+                AdvanceChars(1);
 
             return SyntaxKind.IntegerLiteralToken;
         }
@@ -310,12 +318,12 @@ public class Tokenizer : IEnumerable<SyntaxToken>
     {
         if (Current < 0x80)
         {
-            _position += 1;
+            AdvanceChars(1);
             return;
         }
 
         _ = DecodeRune(_position, out var width);
-        _position += width;
+        AdvanceChars(width);
     }
 
     private Rune DecodeRune(int position, out int width)
