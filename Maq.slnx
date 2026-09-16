@@ -8,7 +8,7 @@
     <Project Path="tests/Maq.Syntax.Tests/Maq.Syntax.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/" />
-  <Folder Name="/tools/Docs.DependencyGraph/">
-    <Project Path="tools/Docs.DependencyGraph/Maq.Docs.DependencyGraph.csproj" />
+  <Folder Name="/tools/Maq.Tools.DependencyGraph/">
+    <Project Path="tools/Maq.Tools.DependencyGraph/Maq.Tools.DependencyGraph.csproj" />
   </Folder>
 </Solution>
