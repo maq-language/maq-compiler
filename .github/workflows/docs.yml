@@ -30,7 +30,7 @@ jobs:
       - name: Generate dependency graph
         run: >
           dotnet run
-          --project tools/Docs.DependencyGraph
+          --project tools/Maq.Tools.DependencyGraph
           --
           Maq.slnx
           --output docs/architecture/project-dependencies.md
