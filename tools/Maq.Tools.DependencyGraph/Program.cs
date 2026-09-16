@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using Microsoft.Build.Locator;
-using Maq.Docs.DependencyGraph;
+using Maq.Tools.DependencyGraph;
 
 var solutionArgument = new Argument<string?>("solution")
 {
@@ -55,6 +55,7 @@ static void Run(string? solution, string? output)
     if (string.IsNullOrEmpty(output))
     {
         profile.Measure("Write document", () => Console.Out.Write(document));
+        Console.Out.WriteLine();
         profile.Print(Console.Error);
         return;
     }

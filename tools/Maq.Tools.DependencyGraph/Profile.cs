@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Maq.Docs.DependencyGraph;
+namespace Maq.Tools.DependencyGraph;
 
 internal class Profile
 {
