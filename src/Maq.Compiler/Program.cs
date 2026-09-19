@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Maq.Compiler;
 
 var symbols = new SymbolTable();
