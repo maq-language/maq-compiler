@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Maq.Compiler\Maq.Compiler.csproj" />
+  </ItemGroup>
+</Project>
