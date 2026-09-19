@@ -98,6 +98,9 @@ public class Tokenizer : IEnumerable<SyntaxToken>
             //  34 "
             (byte)'"' => ScanString(),
 
+            //  36 $
+            (byte)'$' => SyntaxKind.DollarSignToken,
+
             //  37 %
             (byte)'%' => SyntaxKind.PercentSignToken,
 
@@ -166,6 +169,9 @@ public class Tokenizer : IEnumerable<SyntaxToken>
 
             //  91 [
             (byte)'[' => SyntaxKind.LeftSquareBracketToken,
+
+            //  92 \
+            (byte)'\\' => SyntaxKind.ReverseSolidusToken,
 
             //  93 ]
             (byte)']' => SyntaxKind.RightSquareBracketToken,

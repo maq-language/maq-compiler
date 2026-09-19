@@ -48,4 +48,3 @@ public readonly record struct TextSpan
 
     public override string ToString() => $"[{Start}..{End})";
 }
-

@@ -19,6 +19,7 @@ public enum SyntaxKind : ushort
     ExclamationMarkToken,        // !
     ExclamationMarkEqualsToken,  // !=
 
+    DollarSignToken,             // $
     PercentSignToken,            // %
 
     AmpersandToken,              // &
@@ -54,6 +55,7 @@ public enum SyntaxKind : ushort
     QuestionMarkToken,           // ?
 
     LeftSquareBracketToken,      // [
+    ReverseSolidusToken,         // \
     RightSquareBracketToken,     // ]
 
     CircumflexAccentToken,       // ^
