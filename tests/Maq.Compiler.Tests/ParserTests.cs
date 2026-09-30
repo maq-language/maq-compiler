@@ -20,18 +20,21 @@ public sealed class ParserTests
         var binding = unit[0];
         Assert.AreEqual(SyntaxKind.IdentifierToken, binding.Kind);
         Assert.AreEqual("Person", source.GetText(binding.Span));
+
+        // TODO(alex): Once we are returning a real tree, test the rest of the properties.
     }
 
     [TestMethod]
     public void TestParseProcedureBinding()
     {
         var source = SourceText.From(
-        """
-        Serialize = (P Person) ->
-        {
-            Result = NewString(P.Name);
-        }
-        """);
+            """
+            Serialize = (P Person) ->
+            {
+                Result = NewString(P.Name);
+            }
+            """
+        );
 
         var parser = new Parser(source);
         var unit = parser.ParseCompilationUnit();
@@ -49,12 +52,13 @@ public sealed class ParserTests
     public void TestParseMacroProcedureAndCallerIdentifier()
     {
         var source = SourceText.From(
-        """
-        Increment = $(Value u32) ->
-        {
-            $Value;
-        }
-        """);
+            """
+            Increment = $(Value u32) ->
+            {
+                $Value;
+            }
+            """
+        );
 
         var parser = new Parser(source);
         var unit = parser.ParseCompilationUnit();

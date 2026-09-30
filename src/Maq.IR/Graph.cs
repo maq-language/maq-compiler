@@ -32,4 +32,31 @@ public class Graph
         _nodes.Add(new Node(kind, type, inputOffset, checked((ushort)inputs.Length)));
         return id;
     }
+
+    public IEnumerable<NodeId> VisitPostOrder(NodeId root)
+    {
+        var visited = new HashSet<NodeId> { root };
+        var stack = new Stack<(NodeId Id, int NextInput)>();
+        var current = (Id: root, NextInput: 0);
+
+        do
+        {
+            var node = _nodes[current.Id.Value];
+
+            while (current.NextInput < node.InputCount)
+            {
+                var input = _inputs[node.InputOffset + current.NextInput++];
+                if (visited.Add(input))
+                {
+                    stack.Push(current);
+                    current = (input, 0);
+                    node = _nodes[input.Value];
+                }
+            }
+
+            // NOTE(alex): All inputs of this node have already been visited, so visit the node.
+            yield return current.Id;
+        }
+        while (stack.TryPop(out current));
+    }
 }

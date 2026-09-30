@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\Maq.Syntax\Maq.Syntax.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Maq.IR\Maq.IR.csproj" />
+    <ProjectReference Include="..\Maq.Syntax\Maq.Syntax.csproj" />
+  </ItemGroup>
 
 </Project>
