@@ -26,9 +26,9 @@ public sealed class NodeParserTests
         Assert.AreEqual(NodeKind.Constant, graph[id1].Kind);
         Assert.AreEqual(NodeKind.Return, graph[id2].Kind);
 
-        Assert.AreEqual(NodeType.Control, graph[id0].Type);
-        Assert.AreEqual(NodeType.Integer, graph[id1].Type);
-        Assert.AreEqual(NodeType.Control, graph[id2].Type);
+        Assert.AreEqual(NodeType.Bottom, graph[id0].Type);
+        Assert.AreEqual(NodeType.Integer(5), graph[id1].Type); // NOTE(alex): The type of the expression is the integer "5" - it is a compile-time known constant.
+        Assert.AreEqual(NodeType.Bottom, graph[id2].Type);
 
         var inputs0 = graph.GetInputs(id0);
         Assert.AreEqual(0, inputs0.Length); // NOTE(alex): Start depends on nothing

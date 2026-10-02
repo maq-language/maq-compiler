@@ -29,7 +29,7 @@ public class NodeParser
     public Graph Parse()
     {
         var graph = new Graph();
-        var start = graph.Add(NodeKind.Start, NodeType.Control);
+        var start = graph.Add(NodeKind.Start, NodeType.Bottom);
         var result = ParseStatement(graph, start);
         return graph;
     }
@@ -51,7 +51,7 @@ public class NodeParser
             throw new NotImplementedException("Parsing a binding to a name other than 'Result'.");
         }
 
-        return graph.Add(NodeKind.Return, NodeType.Control, start, value);
+        return graph.Add(NodeKind.Return, NodeType.Bottom, start, value);
     }
 
     private NodeId ParseStatement(Graph graph, NodeId start)
@@ -76,7 +76,14 @@ public class NodeParser
         switch (Current.Kind)
         {
             case SyntaxKind.IntegerLiteralToken:
-                return graph.Add(NodeKind.Constant, NodeType.Integer, start);
+		var token = Advance();
+		var text = _tokenizer.Source.GetText(token.Span);
+		if (!ulong.TryParse(text, out var value))
+		{
+		    throw new SyntaxException($"Unable to parse integer {text}.");
+		}
+
+                return graph.Add(NodeKind.Constant, NodeType.Integer(unchecked((long)value)), start);
 
             default:
                 throw new NotImplementedException("Parsing a primary expression other than an integer literal.");
