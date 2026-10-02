@@ -67,8 +67,27 @@ public class NodeParser
 
     private NodeId ParseExpression(Graph graph, NodeId start)
     {
-        var expression = ParsePrimaryExpression(graph, start);
+        var expression = ParseAddition(graph, start);
         return expression;
+    }
+
+    private NodeId ParseAddition(Graph graph, NodeId start)
+    {
+	var expression = ParsePrimaryExpression(graph, start);
+
+	switch (Current.Kind)
+	{
+	    case SyntaxKind.PlusSignToken:
+		Advance(); // NOTE(alex): Consume the "+" token.
+		return graph.AddOrImprove(NodeKind.Add, expression, ParseAddition(graph, start));
+
+	    case SyntaxKind.HyphenMinusToken:
+		Advance(); // NOTE(alex): Consume the "-" token.
+		return graph.AddOrImprove(NodeKind.Subtract, expression, ParseAddition(graph, start));
+
+	    default:
+		return expression;
+	}
     }
 
     private NodeId ParsePrimaryExpression(Graph graph, NodeId start)

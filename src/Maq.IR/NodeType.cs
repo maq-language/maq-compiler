@@ -21,5 +21,5 @@ public record struct NodeType
 
     public static readonly NodeType Bottom = new(NodeTypeKind.Bottom);
 
-    public static NodeType Integer(long value) => new(NodeTypeKind.Integer) { Value = value };
+    public static NodeType Integer(long value) => new(NodeTypeKind.Integer, NodeTypeFlags.IsConstant) { Value = value };
 }

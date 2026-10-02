@@ -33,6 +33,31 @@ public class Graph
         return id;
     }
 
+    /// <summary>
+    /// Add a node to the graph, adding edges for each node id in <paramref name="inputs"/>.
+    /// </summary>
+    public NodeId AddOrImprove(NodeKind kind, params ReadOnlySpan<NodeId> inputs)
+    {
+	// TODO(alex): We need to remove all inputs that are no longer referenced if we constant fold this node.
+
+	switch (kind)
+	{
+	    case NodeKind.Add:
+		var in0 = this[inputs[0]];
+		var in1 = this[inputs[1]];
+		if (in0.Type.Kind == NodeTypeKind.Integer &&
+		    in1.Type.Kind == NodeTypeKind.Integer &&
+		    in0.Type.Flags.HasFlag(NodeTypeFlags.IsConstant) &&
+		    in1.Type.Flags.HasFlag(NodeTypeFlags.IsConstant))
+		{
+		    return Add(NodeKind.Constant, NodeType.Integer(in0.Type.Value + in1.Type.Value));
+		}
+		break;
+	}
+
+	return Add(kind, NodeType.Bottom, inputs);
+    }
+
     public IEnumerable<NodeId> VisitPostOrder(NodeId root)
     {
         var visited = new HashSet<NodeId> { root };

@@ -42,4 +42,13 @@ public sealed class NodeParserTests
         Assert.AreEqual(id0, inputs2[0]);
         Assert.AreEqual(id1, inputs2[1]);
     }
+
+    [TestMethod]
+    public void TestParseBinaryOperators()
+    {
+        var source = SourceText.From("Result = 1 + 2 + 3 + 4 + 5");
+
+        var parser = new NodeParser(source);
+        var graph = parser.Parse();
+    }
 }
